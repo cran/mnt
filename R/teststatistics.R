@@ -893,6 +893,7 @@ PU<-function(data,r=2){
     stop("The data contains non-numeric entries! Check the description for more Information.")
   } else if(!r>0){warning("radius r>0 needed!")
   } else{
+  data=standard(data)
   if(d>3) {it=1} else {it=5}
   vek=rep(0,it)
   if(it==1){start=U(t(MASS::mvrnorm(it,rep(0,d),diag(1,d))))*stats::runif(it)^2*r

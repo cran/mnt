@@ -481,7 +481,7 @@ test.MQ1<-function(data, MC.rep=10000,alpha=0.05){
   }else{warning("Wrong dimensions of data!")}}
   cv<-cv.quan(samplesize=n,dimension=d,quantile=1-alpha,statistic=MQ1,tuning=NULL,repetitions = MC.rep)
   Testst=MQ1(data)
-  result <- list("Test" = "Manzotti-QUiroz 1", "param" = NULL, "Test.value" = Testst, "cv" = cv, "Decision" = (Testst > cv) )
+  result <- list("Test" = "Manzotti-Quiroz 1", "param" = NULL, "Test.value" = Testst, "cv" = cv, "Decision" = (Testst > cv) )
   attr(result, "class") <- "mnt"
   return(result)
 }

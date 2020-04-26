@@ -2,22 +2,16 @@
 % Please edit documentation in R/helpFunctions.R
 \name{standard}
 \alias{standard}
-\title{Standarising data}
+\title{Empirical scaled residuals}
 \usage{
 standard(data)
 }
 \arguments{
-\item{data}{a n x d matrix. ???}
+\item{data}{a n x d matrix of d dimensional data vectors..}
 }
 \value{
-A n x d matrix.
+A n x d matrix of the scaled residuals.
 }
 \description{
-A function that return the standarized data.
+A function that computes the scaled residuals of the data.
 }
-\seealso{
-Other helpfunctions: 
-\code{\link{ENorm}()},
-\code{\link{hilf.e}()}
-}
-\concept{helpfunctions}
