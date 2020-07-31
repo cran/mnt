@@ -4,9 +4,7 @@
 \name{Quantile095}
 \alias{Quantile095}
 \title{Simulated empirical 95\% quantiles of the tests contained in package \code{mnt}}
-\format{
-A data frame with 9 rows and 20 columns.
-}
+\format{A data frame with 9 rows and 20 columns.}
 \usage{
 Quantile095
 }

@@ -16,7 +16,7 @@ value of the test statistic.
 }
 \description{
 This function returns the value of the statistic of the test of multivariate normality (also called \emph{energy test}) as in Székely and Rizzo (2005). Note that the scaled residuals use another scaling in the estimator of the covariance matrix as the other functions of the package \code{mnt}!
-It is equivalent to the function \code{\link[energy]{mvnorm.e}}.
+It is equivalent to the function \code{\link[energy:mvnorm.test]{mvnorm.e}}.
 }
 \examples{
 SR(MASS::mvrnorm(50,c(0,1),diag(1,2)))
@@ -26,5 +26,5 @@ SR(MASS::mvrnorm(50,c(0,1),diag(1,2)))
 Székely, G., and Rizzo, M. (2005), A new test for multivariate normality, J. Multiv. Anal., 93:58–80, \href{https://doi.org/10.1016/j.jmva.2003.12.002}{DOI}
 }
 \seealso{
-\code{\link[energy]{mvnorm.e}}
+\code{\link[energy:mvnorm.test]{mvnorm.e}}
 }

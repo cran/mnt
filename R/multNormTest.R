@@ -819,9 +819,9 @@ test.DEHT<-function(data,a=1,MC.rep=10000,alpha=0.05){
 
 
 
-#' Doerr-Ebner-Henze test of multivariate normality based on a double estimation in PDE
+#' Doerr-Ebner-Henze test of multivariate normality based on a double estimation in a PDE
 #'
-#' Computes the multivariate normality test of Doerr, Ebner and Henze (2019) based on a double estimation in PDE.
+#' Computes the multivariate normality test of Doerr, Ebner and Henze (2019) based on a double estimation in a PDE.
 #'
 #' This functions evaluates the teststatistic with the given data and the specified tuning parameter \code{a}.
 #' Each row of the data Matrix contains one of the n (multivariate) sample with dimension d. To ensure that the computation works properly
@@ -861,6 +861,53 @@ test.DEHU<-function(data,a=0.5,MC.rep=10000,alpha=0.05){
   cv<-cv.quan(samplesize=n,dimension=d,quantile=1-alpha,statistic=DEHU,tuning=a,repetitions = MC.rep)
   Testst=DEHU(data,a)
   result <- list("Test" = "DEH based on a double estimation in PDE", "param" = a, "Test.value" = Testst, "cv" = cv, "Decision" = (Testst > cv) )
+  attr(result, "class") <- "mnt"
+  return(result)
+}
+
+
+#' Ebner-Henze-Strieder test of multivariate normality based on Fourier methods in a multivariate Stein equation
+#'
+#' Computes the multivariate normality test of Ebner, Henze and Strieder (2020) based on Fourier methods in a multivariate Stein equation.
+#'
+#' This functions evaluates the teststatistic with the given data and the specified tuning parameter \code{a}.
+#' Each row of the data Matrix contains one of the n (multivariate) sample with dimension d. To ensure that the computation works properly
+#' \eqn{n \ge d+1} is needed. If that is not the case the test returns an error.
+#'
+#' @param data a n x d matrix of d dimensional data vectors.
+#' @param a positive numeric number (tuning parameter).
+#' @param MC.rep number of repetitions for the Monte Carlo simulation of the critical value.
+#' @param alpha level of significance of the test.
+#'
+#' @return a list containing the value of the test statistic, the approximated critical value and a test decision on the significance level \code{alpha}: \cr
+#' \describe{
+#'         \item{\code{$Test}}{name of the test.}
+#'         \item{\code{$param}}{value tuning parameter.}
+#'         \item{\code{$Test.value}}{the value of the test statistic.}
+#'         \item{\code{$cv}}{the approximated critical value.}
+#'         \item{\code{$Decision}}{the comparison of the critical value and the value of the test statistic.}
+#'}
+#'
+#' @references
+#' Ebner, B., Henze, N., Strieder, D. (2020) "Testing normality in any dimension by Fourier methods in a multivariate Stein equation" \href{https://arxiv.org/abs/2007.02596}{arXiv:2007.02596}
+#'
+#' @examples
+#' test.EHS(MASS::mvrnorm(50,c(0,1),diag(1,2)),a=1,MC=500)
+#'
+#' @seealso
+#' \code{\link{EHS}}
+#'
+#' @export
+test.EHS<-function(data,a=0.5,MC.rep=10000,alpha=0.05){
+  n=dim(data)[1]
+  d=dim(data)[2]
+  if (is.null(n)){if (is.vector(data)){
+    n=length(data)
+    d=1
+  }else{warning("Wrong dimensions of data!")}}
+  cv<-cv.quan(samplesize=n,dimension=d,quantile=1-alpha,statistic=EHS,tuning=a,repetitions = MC.rep)
+  Testst=EHS(data,a)
+  result <- list("Test" = "EHS Test", "param" = a, "Test.value" = Testst, "cv" = cv, "Decision" = (Testst > cv) )
   attr(result, "class") <- "mnt"
   return(result)
 }

@@ -407,7 +407,7 @@ BHEP<-function(data,a=1){
 #' statistic of the Székely-Rizzo test
 #' @description
 #' This function returns the value of the statistic of the test of multivariate normality (also called \emph{energy test}) as in Székely and Rizzo (2005). Note that the scaled residuals use another scaling in the estimator of the covariance matrix as the other functions of the package \code{mnt}!
-#' It is equivalent to the function \code{\link[energy]{mvnorm.e}}.
+#' It is equivalent to the function \code{\link[energy:mvnorm.test]{mvnorm.e}}.
 #'
 #' @param data a n x d matrix of d dimensional data vectors.
 #' @param abb Stop criterium.
@@ -421,7 +421,7 @@ BHEP<-function(data,a=1){
 #' SR(MASS::mvrnorm(50,c(0,1),diag(1,2)))
 #'
 #'@seealso
-#'\code{\link[energy]{mvnorm.e}}
+#'\code{\link[energy:mvnorm.test]{mvnorm.e}}
 #'
 #' @export
 SR<-function(data,abb=1e-8){
@@ -1015,5 +1015,56 @@ DEHU <- function(data,a)
     Y=(Rquad%*%t(Rquad) - (Dj+t(Dj))*(Hilf+2*d*a*(2*a-1))/(4*a^2)+(16*d^2*a^3*(a-1)+4*d*(d+2)*a^2+(8*d*a^2-(8+4*d)*a)*Hilf+Hilf^2)/(16*a^4))*exp(-Hilf/(4*a))
     ret=(pi/a)^(d/2)*sum(Y)/n
     return(ret*d^(-2)*(a/pi)^(d/2))
+  }
+}
+
+#' Statistic of the EHS test based on a multivariate Stein equation
+#'
+#' Computes the test statistic of the EHS test based on a multivariate Stein equation.
+#'
+#' This functions evaluates the teststatistic with the given data and the specified tuning parameter \code{a}.
+#' Each row of the data Matrix contains one of the n (multivariate) sample with dimension d. To ensure that the computation works properly
+#' \eqn{n \ge d+1} is needed. If that is not the case the test returns an error.
+#'
+#' Note that \code{a=Inf} returns the limiting test statistic with value \code{2*\link{MSkew} + \link{MRSSkew}} and \code{a=0} returns the value of the limit statistic
+#' \deqn{T_{n,0}=\frac{d}{2}-2^{\frac{d}{2}+1}\frac{1}{n}\sum_{j=1}^n\|Y_{n,j}\|^2\exp(-\frac{\|Y_{n,j}\|^2}{2}).}
+#'
+#' @param data a (d,n) numeric matrix containing the data.
+#' @param a positive numeric number (tuning parameter).
+#'
+#' @return The value of the test statistic.
+#'
+#' @references
+#' Ebner, B., Henze, N., Strieder, D. (2020) "Testing normality in any dimension by Fourier methods in a multivariate Stein equation" \href{https://arxiv.org/abs/2007.02596}{arXiv:2007.02596}
+#'
+#' @export
+EHS<-function(data,a=1)
+{
+  require(mnt)
+  n=dim(data)[1]
+  d=dim(data)[2]
+  if (is.null(n)){if (is.vector(data)){
+    data=t(t(data))
+    return(EHS(data,a))
+  } else {warning("Wrong dimensions of data!")}} else if(n <= d){
+    warning("Wrong data size! \n Maybe data needs to be transposed. Check the description for more Information.")
+  } else if(!is.numeric(data)){
+    stop("The data contains non-numeric entries! Check the description for more Information.")
+  } else if(!a>=0){warning("tuning parameter a>0 needed!")
+  } else if (a==0) {
+    data=standard(data)
+    Djk=data%*%t(data)
+    Rquad=diag(Djk)
+    return(d/2-2^(d/2+1)*mean(Rquad*exp(-Rquad/2)))
+  } else if (a==Inf){return(2*MSkew(data)+MRSSkew(data))
+  } else {
+    data=standard(data)
+    Djk=data%*%t(data)
+    Rquad=diag(Djk)
+    Dj=matrix(Rquad,n,n)
+    SUM1=Djk*exp(-(1/(4*a))*(Dj-2*Djk+t(Dj)))
+    SUM2=Rquad*exp(-Rquad/(4*a+2))/(2*a+1)
+    ret=(pi/a)^(d/2)*sum(SUM1)/n-2*(2*pi/(2*a+1))^(d/2)*sum(SUM2)+n*(pi/(a+1))^(d/2)*d/(2*(a+1))
+    return(ret)
   }
 }
